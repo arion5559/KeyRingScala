@@ -27,6 +27,7 @@ object Almacenar {
 
   def sacarObjeto(nombre: String): Contacto = {
     var devolver: Contacto = null
+    var outer: ObjectOutputStreamScala = null
 
 
 
