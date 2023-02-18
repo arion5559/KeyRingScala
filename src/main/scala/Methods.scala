@@ -28,7 +28,12 @@ object Methods {
 
     contacto = AlmacenarContacto.sacarObjeto(nombre)
 
+    if (contacto.getKey != null) {
+      var c: Cipher = Cipher.getInstance(contacto.getContactAlgorithm)
+      c.init(Cipher.DECRYPT_MODE, contacto.getKey)
 
+      var encryptedData: Array[Byte] = c.doFinal()
+    }
   }
 
   def encrypt(nombre: String, ficheroEntrada: String, ficheroSalida: String): Unit = {
@@ -44,7 +49,17 @@ object Methods {
       c.init(Cipher.DECRYPT_MODE, contacto.getKey)
 
       encryptedData = c.doFinal()
+    } else if (contacto.getKeys != null) {
+      c = Cipher.getInstance(contacto.getContactAlgorithm)
+      c.init(Cipher.DECRYPT_MODE, contacto.getKeys.getPublic)
+
+      encryptedData = c.doFinal()
+    } else {
+      println("No se ha encontrado el contacto")
     }
+
+    encryptedDataToString = new String(encryptedData)
+    GestionDatos.escribirFichero(ficheroSalida, encryptedDataToString)
   }
 
 }
