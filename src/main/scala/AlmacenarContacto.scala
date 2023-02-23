@@ -51,4 +51,49 @@ object AlmacenarContacto {
 
     devolver
   }
+
+  def listarContactos(archivo: String = "src/main/datos\\llavero.txt") {
+    var devolver: String = ""
+    var outer: ObjectInputStream = null
+    var f: File = null
+    var out: ObjectOutputStreamScala = null
+
+    try {
+      f = new File(archivo)
+
+      outer = new ObjectInputStream(new FileInputStream(f))
+
+      do {
+        println(outer.readObject().asInstanceOf[Contacto].getContactName + "\n")
+      }while(outer.available() > 0)
+    } catch {
+      case fnfe: FileNotFoundException => println(fnfe.getMessage)
+      case ioe: IOException => println(ioe.getMessage)
+      case e: Exception => println(e.getMessage)
+    }
+  }
+
+  def buscarContacto(nombre: String, archivo: String = "src/main/datos\\llavero.txt") {
+    var devolver: String = ""
+    var outer: ObjectInputStream = null
+    var f: File = null
+    var out: ObjectOutputStreamScala = null
+
+    try {
+      f = new File(archivo)
+
+      outer = new ObjectInputStream(new FileInputStream(f))
+
+      do {
+        devolver = outer.readObject().asInstanceOf[Contacto].getContactName
+        if (devolver.equals(nombre)){
+          println(devolver)
+        }
+      }while(outer.available() > 0)
+    } catch {
+      case fnfe: FileNotFoundException => println(fnfe.getMessage)
+      case ioe: IOException => println(ioe.getMessage)
+      case e: Exception => println(e.getMessage)
+    }
+  }
 }

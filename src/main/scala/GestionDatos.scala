@@ -1,7 +1,7 @@
 import java.io.{BufferedReader, BufferedWriter, File, FileNotFoundException, FileOutputStream, FileReader, FileWriter, IOException, InputStreamReader};
 
 object GestionDatos {
-  def sacarInfo(fichero: String): String = {
+  def leerFichero(fichero: String): String = {
     var f: File = null
     var br: BufferedReader = null
     var devolver: String = ""
@@ -25,7 +25,6 @@ object GestionDatos {
     }
 
     devolver
-
   }
 
   def escribirFichero(fichero: String, info: String) = {
