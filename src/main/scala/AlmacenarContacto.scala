@@ -73,7 +73,7 @@ object AlmacenarContacto {
     }
   }
 
-  def buscarContacto(nombre: String, archivo: String = "src/main/datos\\llavero.txt") {
+  def buscarContacto(nombre: String, archivo: String = "src/main/datos\\llavero.txt"): String = {
     var devolver: String = ""
     var outer: ObjectInputStream = null
     var f: File = null
@@ -95,5 +95,12 @@ object AlmacenarContacto {
       case ioe: IOException => println(ioe.getMessage)
       case e: Exception => println(e.getMessage)
     }
+
+    if (devolver.equals("")){
+      println("No se ha encontrado el contacto")
+      devolver = null
+    }
+
+    devolver
   }
 }

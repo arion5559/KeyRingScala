@@ -35,8 +35,15 @@ object Gestión {
     var algorithm: String = ""
     var longitudLlaves: Int = 0
 
-    println("Introduzca el nombre del contacto: ")
-    nombre = scala.io.StdIn.readLine()
+    // Verifica que no exista otro contacto con el mismo nombre
+    do {
+      println("Introduzca el nombre del contacto: ")
+      nombre = scala.io.StdIn.readLine()
+
+      if (Methods.buscarContacto(nombre) != null) {
+        println("Ya existe un contacto con ese nombre")
+      }
+    } while (Methods.buscarContacto(nombre) != null)
 
     println("¿Es el contacto simétrico o asimétrico? (S/A)")
     simOrAsim = scala.io.StdIn.readChar()
