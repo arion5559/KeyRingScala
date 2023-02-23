@@ -1,8 +1,9 @@
 import java.io
 import java.io.{File, FileInputStream, FileNotFoundException, FileOutputStream, IOException, ObjectInputStream, ObjectOutputStream}
+import scala.collection.mutable
 
 object AlmacenarContacto {
-  def almacenarObjeto(guardar: Any, archivo: String = "src/main/datos\\llavero.txt") = {
+  def almacenarObjeto(guardar: Any, archivo: String = "..\\datos\\llavero.txt") = {
     var out: ObjectOutputStreamScala = null
     var f: File = null
 
@@ -25,7 +26,7 @@ object AlmacenarContacto {
     }
   }
 
-  def sacarObjeto(nombre: String, archivo: String = "src/main/datos\\llavero.txt"): Contacto = {
+  def sacarObjeto(nombre: String, archivo: String = "..\\datos\\llavero.txt"): Contacto = {
     var devolver: Contacto = null
     var outer: ObjectInputStream = null
     var f: File = null
@@ -52,7 +53,7 @@ object AlmacenarContacto {
     devolver
   }
 
-  def listarContactos(archivo: String = "src/main/datos\\llavero.txt") {
+  def listarContactos(archivo: String = "..\\datos\\llavero.txt") {
     var devolver: String = ""
     var outer: ObjectInputStream = null
     var f: File = null
@@ -73,11 +74,13 @@ object AlmacenarContacto {
     }
   }
 
-  def buscarContacto(nombre: String, archivo: String = "src/main/datos\\llavero.txt"): String = {
+  def buscarContacto(nombre: String, archivo: String = "..\\datos\\llavero.txt"): mutable.Buffer[Contacto] = {
     var devolver: String = ""
     var outer: ObjectInputStream = null
     var f: File = null
-    var out: ObjectOutputStreamScala = null
+    var contacto: Contacto = null
+    var contactos: mutable.Buffer[Contacto] = mutable.Buffer[Contacto]()
+    var contactosNum: Int = 0
 
     try {
       f = new File(archivo)
@@ -85,9 +88,12 @@ object AlmacenarContacto {
       outer = new ObjectInputStream(new FileInputStream(f))
 
       do {
-        devolver = outer.readObject().asInstanceOf[Contacto].getContactName
+        contacto = outer.readObject().asInstanceOf[Contacto]
+        contactos += contacto
+        devolver = contacto.getContactName
         if (devolver.equals(nombre)){
-          println(devolver)
+          contactosNum += 1
+          println(contactosNum + ". " + devolver)
         }
       }while(outer.available() > 0)
     } catch {
@@ -98,9 +104,42 @@ object AlmacenarContacto {
 
     if (devolver.equals("")){
       println("No se ha encontrado el contacto")
-      devolver = null
+      contactos = null
     }
 
-    devolver
+    contactos
+  }
+
+  def verificarContactoNoExiste(nombre: String, archivo: String = "..\\datos\\llavero.txt"): Boolean = {
+    var devolver: String = ""
+    var outer: ObjectInputStream = null
+    var f: File = null
+    var contactosNum: Int = 0
+
+    try {
+      f = new File(archivo)
+      if (!f.exists()){
+        f.createNewFile()
+      }
+
+      outer = new ObjectInputStream(new FileInputStream(f))
+
+      do {
+        devolver = outer.readObject().asInstanceOf[Contacto].getContactName
+        if (devolver.equals(nombre)){
+          contactosNum += 1
+        }
+      }while(outer.available() > 0)
+    } catch {
+      case fnfe: FileNotFoundException => println(fnfe.getMessage)
+      case ioe: IOException => println(ioe.getMessage)
+      case e: Exception => println(e.getMessage)
+    }
+
+    if (contactosNum == 0){
+      true
+    }else{
+      false
+    }
   }
 }

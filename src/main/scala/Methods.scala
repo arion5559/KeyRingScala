@@ -1,16 +1,8 @@
 import java.security.{KeyPairGenerator, MessageDigest}
 import javax.crypto.{Cipher, KeyGenerator}
+import scala.collection.mutable
 
 object Methods {
-
-  /*
-  *create S|A nombre longitud algoritmo
-  *create parámetro que indica que se desea crear un nuevo contacto
-  *S|A parámetro que indica si se crea una llave simétrica o asimétrica
-  *nombre parámetro que indica el nombre del contacto
-  *longitud  longitud de la/s llave/s que se crean. Entero
-  *algoritmo nombre del algoritmo a usar. Es un texto como por ejemplo "AES" o "RSA"
-   */
   def create(simOrAsim: Char, nombre: String, algorithm: String, longitudLlaves: Int = 0) = {
     var contacto: Contacto = null
     var keyGenerator: KeyGenerator = null
@@ -48,12 +40,17 @@ object Methods {
       c = Cipher.getInstance(contacto.getContactAlgorithm)
       c.init(Cipher.DECRYPT_MODE, contacto.getKey)
 
-      decryptedData = c.doFinal(GestionDatos.leerFichero(ficheroEntrada).getBytes())
+      if (GestionDatos.leerFichero(ficheroEntrada).length == 0 || GestionDatos.leerFichero(ficheroEntrada) == null) {
+        decryptedData = c.doFinal(GestionDatos.leerFichero(ficheroEntrada).getBytes())
+      }
+
     } else if (contacto.getKeys != null) {
       c = Cipher.getInstance(contacto.getContactAlgorithm)
       c.init(Cipher.DECRYPT_MODE, contacto.getKeys.getPublic)
 
-      decryptedData = c.doFinal(GestionDatos.leerFichero(ficheroEntrada).getBytes())
+      if (GestionDatos.leerFichero(ficheroEntrada).length == 0 || GestionDatos.leerFichero(ficheroEntrada) == null) {
+        decryptedData = c.doFinal(GestionDatos.leerFichero(ficheroEntrada).getBytes())
+      }
 
       verify(ficheroEntrada, contacto.getContactName)
     } else {
@@ -77,20 +74,19 @@ object Methods {
       c = Cipher.getInstance(contacto.getContactAlgorithm)
       c.init(Cipher.DECRYPT_MODE, contacto.getKey)
 
-      encryptedData = c.doFinal(GestionDatos.leerFichero(ficheroEntrada).getBytes())
-
-      if (sign) {
-        firm(ficheroEntrada, contacto)
+      if (GestionDatos.leerFichero(ficheroEntrada).length == 0 || GestionDatos.leerFichero(ficheroEntrada) == null) {
+        encryptedData = c.doFinal(GestionDatos.leerFichero(ficheroEntrada).getBytes())
+        GestionDatos.escribirFichero(ficheroSalida, new String(encryptedData))
       }
 
-      GestionDatos.escribirFichero(ficheroSalida, new String(encryptedData))
     } else if (contacto.getKeys != null) {
       c = Cipher.getInstance(contacto.getContactAlgorithm)
       c.init(Cipher.DECRYPT_MODE, contacto.getKeys.getPublic)
 
-      encryptedData = c.doFinal(GestionDatos.leerFichero(ficheroEntrada).getBytes())
-
-      GestionDatos.escribirFichero(ficheroSalida, new String(encryptedData))
+      if (GestionDatos.leerFichero(ficheroEntrada).length == 0 || GestionDatos.leerFichero(ficheroEntrada) == null) {
+        encryptedData = c.doFinal(GestionDatos.leerFichero(ficheroEntrada).getBytes())
+        GestionDatos.escribirFichero(ficheroSalida, new String(encryptedData))
+      }
 
       if (sign) {
         firm(ficheroEntrada, contacto)
@@ -98,9 +94,6 @@ object Methods {
     } else {
       println("No se ha encontrado el contacto")
     }
-
-    encryptedDataToString = new String(encryptedData)
-    GestionDatos.escribirFichero(ficheroSalida, encryptedDataToString)
   }
 
   def firm(ficheroEntrada: String, contacto: Contacto) {
@@ -124,10 +117,6 @@ object Methods {
     } else {
       println("No se ha encontrado el contacto")
     }
-  }
-
-  def list(): Unit = {
-    AlmacenarContacto.listarContactos()
   }
 
   def verify(nombre: String, ficheroEntrada: String): Unit = {
@@ -164,7 +153,21 @@ object Methods {
     AlmacenarContacto.listarContactos()
   }
 
-  def buscarContacto(nombre: String) {
-    AlmacenarContacto.buscarContacto(nombre)
+  def buscarContacto(nombre: String): Contacto = {
+    var contactos: mutable.Buffer[Contacto] = null
+
+    contactos = AlmacenarContacto.buscarContacto(nombre)
+
+    if (contactos.size > 0) {
+      println("Introduzca el número del contacto que desea seleccionar")
+      var numContacto: Int = scala.io.StdIn.readInt()
+      contactos(numContacto)
+    }
+
+    null
+  }
+
+  def verificarContactoNoExiste(nombre: String): Boolean = {
+    AlmacenarContacto.verificarContactoNoExiste(nombre)
   }
 }

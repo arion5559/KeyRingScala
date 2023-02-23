@@ -8,6 +8,9 @@ object GestionDatos {
 
     try {
       f = new File(fichero)
+      if (!f.exists()){
+        return ""
+      }
 
       br = new BufferedReader(new FileReader(f))
 
@@ -33,6 +36,9 @@ object GestionDatos {
 
     try {
       f = new File(fichero)
+      if (!f.exists()){
+        f.createNewFile()
+      }
 
       if (!f.exists()){
         f.createNewFile()

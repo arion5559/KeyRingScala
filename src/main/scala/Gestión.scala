@@ -40,10 +40,10 @@ object Gestión {
       println("Introduzca el nombre del contacto: ")
       nombre = scala.io.StdIn.readLine()
 
-      if (Methods.buscarContacto(nombre) != null) {
+      if (Methods.verificarContactoNoExiste(nombre) == false) {
         println("Ya existe un contacto con ese nombre")
       }
-    } while (Methods.buscarContacto(nombre) != null)
+    } while (Methods.verificarContactoNoExiste(nombre) != null)
 
     println("¿Es el contacto simétrico o asimétrico? (S/A)")
     simOrAsim = scala.io.StdIn.readChar()
@@ -63,6 +63,7 @@ object Gestión {
     var nombre: String = ""
     var ficheroEntrada: String = ""
     var ficheroSalida: String = ""
+    var sign: Boolean = false
 
     println("Introduzca el nombre del contacto: ")
     nombre = scala.io.StdIn.readLine()
@@ -73,7 +74,17 @@ object Gestión {
     println("Introduzca el nombre del fichero de salida: ")
     ficheroSalida = scala.io.StdIn.readLine()
 
-    Methods.encrypt(nombre, ficheroEntrada, ficheroSalida)
+    // verifica que el contacto tiene una llave privada y en tal caso pregunta si se quiere firmar el mensaje
+    if (Methods.buscarContacto(nombre).getKeys != null) {
+      println("¿Desea firmar el mensaje? (S/N)")
+      var opcion: Char = scala.io.StdIn.readChar()
+
+      if (opcion == 'S') {
+        sign = true
+      }
+    }
+
+    Methods.encrypt(sign, nombre, ficheroEntrada, ficheroSalida)
   }
 
   def recibirMensaje() {
