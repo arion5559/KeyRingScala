@@ -3,7 +3,7 @@ import java.io.{File, FileInputStream, FileNotFoundException, FileOutputStream, 
 import scala.collection.mutable
 
 object AlmacenarContacto {
-  def almacenarObjeto(guardar: Any, archivo: String = "..\\datos\\llavero.txt") = {
+  def almacenarObjeto(guardar: Any, archivo: String = "..\\datos\\llavero.ser") = {
     var out: ObjectOutputStreamScala = null
     var f: File = null
 
@@ -26,7 +26,7 @@ object AlmacenarContacto {
     }
   }
 
-  def sacarObjeto(nombre: String, archivo: String = "..\\datos\\llavero.txt"): Contacto = {
+  def sacarObjeto(nombre: String, archivo: String = "..\\datos\\llavero.ser"): Contacto = {
     var devolver: Contacto = null
     var outer: ObjectInputStream = null
     var f: File = null
@@ -53,7 +53,7 @@ object AlmacenarContacto {
     devolver
   }
 
-  def listarContactos(archivo: String = "..\\datos\\llavero.txt") {
+  def listarContactos(archivo: String = "..\\datos\\llavero.ser") {
     var devolver: String = ""
     var outer: ObjectInputStream = null
     var f: File = null
@@ -74,7 +74,7 @@ object AlmacenarContacto {
     }
   }
 
-  def buscarContacto(nombre: String, archivo: String = "..\\datos\\llavero.txt"): mutable.Buffer[Contacto] = {
+  def buscarContacto(nombre: String, archivo: String = "..\\datos\\llavero.ser"): mutable.Buffer[Contacto] = {
     var devolver: String = ""
     var outer: ObjectInputStream = null
     var f: File = null
@@ -110,7 +110,7 @@ object AlmacenarContacto {
     contactos
   }
 
-  def verificarContactoNoExiste(nombre: String, archivo: String = "..\\datos\\llavero.txt"): Boolean = {
+  def verificarContactoNoExiste(nombre: String, archivo: String = "..\\datos\\llavero.ser"): Boolean = {
     var devolver: String = ""
     var outer: ObjectInputStream = null
     var f: File = null

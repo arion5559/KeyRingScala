@@ -3,7 +3,7 @@ import javax.crypto.{Cipher, SecretKey}
 import javax.security
 
 class Contacto (name: String, llaves: KeyPair = null,
-                llave:SecretKey = null, algorithm: String) {
+                llave:SecretKey = null, algorithm: String) extends Serializable {
   private var contactName: String = name
   private val keys:KeyPair = llaves
   private val key:SecretKey = llave
