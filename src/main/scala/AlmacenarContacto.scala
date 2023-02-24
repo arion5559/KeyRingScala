@@ -5,6 +5,7 @@ import scala.collection.mutable
 object AlmacenarContacto {
   def almacenarObjeto(guardar: Any, archivo: String = "..\\datos\\llavero.ser") = {
     var out: ObjectOutputStreamScala = null
+    var outFirst: ObjectOutputStream = null
     var f: File = null
 
     try {
@@ -13,9 +14,13 @@ object AlmacenarContacto {
         f.createNewFile()
       }
 
-      out = new ObjectOutputStreamScala(new FileOutputStream(f))
-
-      out.writeObject(guardar)
+      if (f.length() > 0){
+        out = new ObjectOutputStreamScala(new FileOutputStream(f, true))
+        out.writeObject(guardar)
+      } else {
+        outFirst = new ObjectOutputStream(new FileOutputStream(f))
+        outFirst.writeObject(guardar)
+      }
 
       out.flush()
       out.close()
